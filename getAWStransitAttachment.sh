@@ -18,10 +18,14 @@ fi
 source ./$SecretCredentialFile
 
 # Create Result File Name
-TransitAttachmentFile="./transit-gateway-attachments-$NetworkAccountID"
+TransitAttachmentFile="transit-gateway-attachments-$NetworkAccountID"
+TransitAttachmentFileLocation="./$TransitAttachmentFile"
 
 # Run GET Transit Gateway Attachment
 aws ec2 describe-transit-gateway-attachments > $TransitAttachmentFile
+
+# Run re Arrange the file
+./findAccountFromTransitAttachments.py $TransitAttachmentFile
 
 # Unset Environment
 unset AWS_ACCESS_KEY_ID
