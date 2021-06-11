@@ -1,5 +1,10 @@
 #! /usr/bin/env bash
 
+# Unset Environment
+unset AWS_ACCESS_KEY_ID
+unset AWS_SECRET_ACCESS_KEY
+unset AWS_SESSION_TOKEN
+
 # Check Configuration file
 if [ -f ./runcommand-config.cfg  ]
 then
@@ -9,7 +14,9 @@ else
 	exit
 fi
 
-for ACNum in $(cat returnAccount-transit-gateway-attachments-966005033895 | awk '{print $1}')
+rFILEname="$FilePrefixValidAccountfromTransitAttachment-$TransitAttachmentFile"
+
+for ACNum in $(cat $rFILEname | awk '{print $1}')
 do
 	# Verfication for credentional
 	NTIME=$(date +"%s")

@@ -11,7 +11,7 @@ class MainFunction:
                 stingtoJson = json.loads(f.read())
                 rearrangeText = []
                 for elementDict in stingtoJson['TransitGatewayAttachments']:
-                    rearrangeText.append("{} {} {}\n".format(elementDict['ResourceOwnerId'], elementDict['ResourceId'], elementDict['State']))
+                    rearrangeText.append("{} {} {} {} {} {}\n".format(elementDict['ResourceOwnerId'], elementDict['ResourceId'], elementDict['TransitGatewayAttachmentId'], elementDict['State'], elementDict['Association']['TransitGatewayRouteTableId'], elementDict['Association']['State']))
                 # result write in file
                 foName="{}-{}".format(foPrefix,fName)
                 with open(foName,"w") as fo:
