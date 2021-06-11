@@ -17,12 +17,11 @@ then
 	ReferenceTIME=$(cat $SecretCredentialFile | grep -i "ExpectedTimeforExprie" | awk '{print $(NF-1)}')
 	if [ $NTIME -le $ReferenceTIME ]
 	then
-		echo "[notice] $SecretCredentialFile is still valid"
 		exit
 	fi
 fi
 
-# Get the Credential for Network Account
+# Get Origin File temporary and Create
 aws sts assume-role --role-arn arn:aws:iam::$NetworkAccountID:role/SKTNetworkToolRole --role-session-name temprole-$NetworkAccountID --external-id $ExternalID > $TempFile
 
 echo "# ExpectedTimeforExprie : $ExpTIME #" > $SecretCredentialFile
@@ -34,5 +33,3 @@ if [ -f $TempFile ]
 then
 	rm -rf $TempFile
 fi
-
-
