@@ -50,7 +50,10 @@ do
         # Origin FileName
 	OutFILE="$NetAdmDIR/$FilePrefixRoutefromTransit-$RouteTableID-$NetworkAccountID"
 	returnMsg=$(aws ec2 search-transit-gateway-routes --transit-gateway-route-table-id $RouteTableID  --filters "Name=attachment.transit-gateway-attachment-id,Values=$TGWattachID")
-	echo "$returnMsg," >> $OutFILE
+	if [ ${#returnMsg} -ne 0 ]
+	then
+		echo "$returnMsg," >> $OutFILE
+	fi
 	## in Python ==> ReadJson = json.loads("{\"result\":["+",".join(f.read()[:-1])+"]}")
 	# display processing
 	echo -n "!"

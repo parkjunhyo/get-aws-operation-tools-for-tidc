@@ -37,7 +37,10 @@ do
 	source $ENVSource
 	# run Command
 	returnMsg=$(aws ec2 describe-network-interfaces --filters "Name=vpc-id,Values=$VPCIDnum")
-	echo "$returnMsg," >> $userDIR/$FilePrefixNetInterfaces
+	if [ ${#returnMsg} -ne 0 ]
+	then
+		echo "$returnMsg," >> $userDIR/$FilePrefixNetInterfaces
+	fi
 	# disable environment
 	./disableSecret.sh
 	# Display processing
