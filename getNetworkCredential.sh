@@ -26,13 +26,19 @@ then
 	fi
 fi
 
+# Create Direct for Secret Directory
+if [ ! -d ./$SecretDIR ]
+then
+	mkdir ./$SecretDIR 
+fi
+
 # Get Origin File temporary and Create
 aws sts assume-role --role-arn arn:aws:iam::$NetworkAccountID:role/SKTNetworkToolRole --role-session-name temprole-$NetworkAccountID --external-id $ExternalID > $TempFile
 
-echo "# ExpectedTimeforExprie : $ExpTIME #" > $SecretCredentialFile
-echo "export AWS_ACCESS_KEY_ID=$(cat $TempFile | grep -i AccessKeyId | awk -F"[\"]" '{print $4}')" >> $SecretCredentialFile
-echo "export AWS_SECRET_ACCESS_KEY=$(cat $TempFile | grep -i SecretAccessKey | awk -F"[\"]" '{print $4}')" >> $SecretCredentialFile
-echo "export AWS_SESSION_TOKEN=$(cat $TempFile | grep -i SessionToken | awk -F"[\"]" '{print $4}')" >> $SecretCredentialFile
+echo "# ExpectedTimeforExprie : $ExpTIME #" > ./$SecretDIR/$SecretCredentialFile
+echo "export AWS_ACCESS_KEY_ID=$(cat $TempFile | grep -i AccessKeyId | awk -F"[\"]" '{print $4}')" >> ./$SecretDIR/$SecretCredentialFile
+echo "export AWS_SECRET_ACCESS_KEY=$(cat $TempFile | grep -i SecretAccessKey | awk -F"[\"]" '{print $4}')" >> ./$SecretDIR/$SecretCredentialFile
+echo "export AWS_SESSION_TOKEN=$(cat $TempFile | grep -i SessionToken | awk -F"[\"]" '{print $4}')" >> ./$SecretDIR/$SecretCredentialFile
 
 if [ -f $TempFile ]
 then

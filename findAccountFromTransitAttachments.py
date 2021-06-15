@@ -13,8 +13,11 @@ class MainFunction:
                 for elementDict in stingtoJson['TransitGatewayAttachments']:
                     rearrangeText.append("{} {} {} {} {} {}\n".format(elementDict['ResourceOwnerId'], elementDict['ResourceId'], elementDict['TransitGatewayAttachmentId'], elementDict['State'], elementDict['Association']['TransitGatewayRouteTableId'], elementDict['Association']['State']))
                 # result write in file
-                foName="{}-{}".format(foPrefix,fName)
-                with open(foName,"w") as fo:
+                splitedfNameList=fName.split("/")
+                foName="{}-{}".format(foPrefix,splitedfNameList[-1])
+                splitedfNameList[-1]=foName
+                foNameLocation="/".join(splitedfNameList)
+                with open(foNameLocation,"w") as fo:
                     fo.writelines(rearrangeText)
         else:
             print("[error] missing parameter : {} [transit-gateway-attachments] ".format(argv[0]))

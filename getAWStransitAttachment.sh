@@ -15,18 +15,26 @@ else
 fi
 
 # Generate Network Credential 
-if [ ! -f ./$SecretCredentialFile ]
+if [ ! -f ./$SecretDIR/$SecretCredentialFile ]
 then
 	./getNetworkCredential.sh
 fi
 
-source ./$SecretCredentialFile
+# Switch to Network Account
+source ./$SecretDIR/$SecretCredentialFile
+
+
+# Create Directory for Network Account
+if [ ! -d ./$NetAdmDIR ]
+then
+	mkdir ./$NetAdmDIR
+fi
 
 # Run GET Transit Gateway Attachment
-aws ec2 describe-transit-gateway-attachments > $TransitAttachmentFile
+aws ec2 describe-transit-gateway-attachments > ./$NetAdmDIR/$TransitAttachmentFile
 
 # Run re Arrange the file
-./findAccountFromTransitAttachments.py $TransitAttachmentFile $FilePrefixValidAccountfromTransitAttachment
+./findAccountFromTransitAttachments.py ./$NetAdmDIR/$TransitAttachmentFile $FilePrefixValidAccountfromTransitAttachment
 
 # Unset Environment
 unset AWS_ACCESS_KEY_ID
