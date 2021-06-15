@@ -15,23 +15,30 @@ else
 fi
 
 # Essecial Verfication
-EssFILE="$FilePrefixValidAccountfromTransitAttachment-$TransitAttachmentFile"
-if [ ! -f ./$EssFILE ]
+EssFILE=$NetAdmDIR/$FilePrefixValidAccountfromTransitAttachment-$TransitAttachmentFile
+
+if [ ! -f $EssFILE ]
 then
 	echo "[error] run getAWStransitAttachment.sh"
 	exit
 fi
 
 # Update NetworkAccount
-if [ ! -f $SecretCredentialFile ]
+if [ ! -f $SecretDIR/$SecretCredentialFile ]
 then
 	echo "[error] run getAccountCredentials.sh"
 	exit
 fi
-source $SecretCredentialFile
+source $SecretDIR/$SecretCredentialFile
+
+# Create Directory for Network Account
+if [ ! -d ./$NetAdmDIR ]
+then
+	        mkdir ./$NetAdmDIR
+fi
 
 # find out origin route table
-rm -rf ./"$FilePrefixRoutefromTransit"*"$NetworkAccountID"
+rm -rf ./$NetAdmDIR/"$FilePrefixRoutefromTransit"*"$NetworkAccountID"
 
 while read stringLine
 do
@@ -41,7 +48,7 @@ do
 	TGWattachID=${strarr[2]}
 	RouteTableID=${strarr[4]}
         # Origin FileName
-	OutFILE="$FilePrefixRoutefromTransit-$RouteTableID-$NetworkAccountID"
+	OutFILE="$NetAdmDIR/$FilePrefixRoutefromTransit-$RouteTableID-$NetworkAccountID"
 	returnMsg=$(aws ec2 search-transit-gateway-routes --transit-gateway-route-table-id $RouteTableID  --filters "Name=attachment.transit-gateway-attachment-id,Values=$TGWattachID")
 	echo "$returnMsg," >> $OutFILE
 	## in Python ==> ReadJson = json.loads("{\"result\":["+",".join(f.read()[:-1])+"]}")

@@ -14,14 +14,14 @@ else
 	exit
 fi
 
-rFILEname="$FilePrefixValidAccountfromTransitAttachment-$TransitAttachmentFile"
+rFILEname=$NetAdmDIR/$FilePrefixValidAccountfromTransitAttachment-$TransitAttachmentFile
 
 for ACNum in $(cat $rFILEname | awk '{print $1}')
 do
 	# Verfication for credentional
 	NTIME=$(date +"%s")
 	ExpTIME=$(expr $NTIME + $ExpiredTimeDurationSecond)
-	ACSecretCredentialFile="./secret-credential-$ACNum"
+	ACSecretCredentialFile="./$SecretDIR/secret-credential-$ACNum"
 	if [ -f $ACSecretCredentialFile ]
 	then
 		ReferenceTIME=$(cat $ACSecretCredentialFile | grep -i "ExpectedTimeforExprie" | awk '{print $(NF-1)}')
@@ -42,4 +42,11 @@ do
 	then
 		rm -rf $TempFile
 	fi
+	# Display processing
+	echo -n "!"
 done
+
+# Unset Environment
+unset AWS_ACCESS_KEY_ID
+unset AWS_SECRET_ACCESS_KEY
+unset AWS_SESSIO
