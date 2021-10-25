@@ -5,6 +5,7 @@ import boto3
 import json
 import sys
 import ipaddress
+import uuid
 
 with open("attached_virtualnetworks.db.txt","r") as fn:
     attached_virtualnetworks_db = json.loads(fn.read())
@@ -44,7 +45,7 @@ for contents in attached_virtualnetworks_db["response"]:
                     break
         
         # result_form_json initialized
-        result_form_json = { "OwnerId":contents['ResourceOwnerId'], "VpcId":contents['ResourceId'], "DestinationCidrBlockUsages" : [] }
+        result_form_json = { "uuid" : str(uuid.uuid4()), "OwnerId":contents['ResourceOwnerId'], "VpcId":contents['ResourceId'], "DestinationCidrBlockUsages" : [] }
         for destcidr in contents['DestinationCidrBlock']:
             if destcidr in init_temp.keys():
 
@@ -54,9 +55,9 @@ for contents in attached_virtualnetworks_db["response"]:
                 for cidrblocks in init_temp[destcidr]:
                     left_sum = left_sum + int(cidrblocks['AvailableIpAddressCount'])
                 usaged_percentage = round(((allocated_totalsize-left_sum)/allocated_totalsize)*100)
-                result_form_json['DestinationCidrBlockUsages'].append({ 'DestinationCidrBlock' : destcidr, 'SubnetUsages' : init_temp[destcidr], 'CidrBlockUsagePercentage' : str(usaged_percentage) })
+                result_form_json['DestinationCidrBlockUsages'].append({ 'DestinationCidrBlock' : destcidr, 'SubnetUsages' : init_temp[destcidr], 'CidrBlockUsagePercentage' : usaged_percentage })
             else:
-                result_form_json['DestinationCidrBlockUsages'].append({ 'DestinationCidrBlock' : destcidr, 'SubnetUsages' : [], 'CidrBlockUsagePercentage' : '' })
+                result_form_json['DestinationCidrBlockUsages'].append({ 'DestinationCidrBlock' : destcidr, 'SubnetUsages' : [], 'CidrBlockUsagePercentage' : 0 })
         subnet_usages_contents['response'].append(result_form_json)
 
 # now, there are  types of dictionary,
