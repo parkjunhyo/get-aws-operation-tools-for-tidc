@@ -47,9 +47,16 @@ for contents in attached_virtualnetworks_db["response"]:
         result_form_json = { "OwnerId":contents['ResourceOwnerId'], "VpcId":contents['ResourceId'], "DestinationCidrBlockUsages" : [] }
         for destcidr in contents['DestinationCidrBlock']:
             if destcidr in init_temp.keys():
-                result_form_json['DestinationCidrBlockUsages'].append({ 'DestinationCidrBlock' : destcidr, 'SubnetUsages' : init_temp[destcidr] })
+
+                # calculating percentage for used
+                allocated_totalsize=2**(int(32)-int(destcidr.split('/')[1]))
+                left_sum = int(0)
+                for cidrblocks in init_temp[destcidr]:
+                    left_sum = left_sum + int(cidrblocks['AvailableIpAddressCount'])
+                usaged_percentage = round(((allocated_totalsize-left_sum)/allocated_totalsize)*100)
+                result_form_json['DestinationCidrBlockUsages'].append({ 'DestinationCidrBlock' : destcidr, 'SubnetUsages' : init_temp[destcidr], 'CidrBlockUsagePercentage' : str(usaged_percentage) })
             else:
-                result_form_json['DestinationCidrBlockUsages'].append({ 'DestinationCidrBlock' : destcidr, 'SubnetUsages' : [] })
+                result_form_json['DestinationCidrBlockUsages'].append({ 'DestinationCidrBlock' : destcidr, 'SubnetUsages' : [], 'CidrBlockUsagePercentage' : '' })
         subnet_usages_contents['response'].append(result_form_json)
 
 # now, there are  types of dictionary,
