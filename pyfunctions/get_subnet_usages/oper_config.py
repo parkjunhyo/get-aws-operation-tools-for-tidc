@@ -1,5 +1,4 @@
 # default variables
-use_default_credential = True # if you want to use indivisual credentail, change to False
 user_aws_access_key_id = ""
 user_aws_secret_access_key = ""
 
