@@ -57,9 +57,10 @@ for contents in attached_virtualnetworks_db["response"]:
                     break
         
         # result_form_json initialized
+        # OwneId should use mark '#' to export to CSV file
         dynamodb_form = {
                 "uuid" : { "S" : str(uuid.uuid4()) },
-                "OwnerId" : { "S" : contents['ResourceOwnerId'] },
+                "OwnerId" : { "S" : "#"+contents['ResourceOwnerId'] },
                 "VpcId" : { "S" : contents['ResourceId'] },
                 "DestinationCidrBlockUsages" : { "L" : [] }
                 }
